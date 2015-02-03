@@ -1,0 +1,14 @@
+<!-- IF S_IN_POSTING and not $INCLUDED_ICHORDATCSS -->
+	<!-- INCLUDECSS {T_EXT_MENTIONS_PATH}/lib/ichord/At.js/dist/css/jquery.atwho.min.css -->
+    <!-- DEFINE $INCLUDED_ICHORDATCSS = true -->
+<!-- ENDIF -->
+
+<!-- INCLUDECSS ../theme/mentions.css -->
+
+<!-- IF MENTIONS_JSON_DATA -->
+	<script type="text/javascript">
+		// <![CDATA[
+		{MENTIONS_JSON_DATA}
+		// ]]>
+	</script>
+<!-- ENDIF -->

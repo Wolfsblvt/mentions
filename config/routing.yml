@@ -1,0 +1,3 @@
+wolfsblvt_mentions_controller:
+    path: /mentions/user_list
+    defaults: { _controller: wolfsblvt.mentions.controller:get_userlist }

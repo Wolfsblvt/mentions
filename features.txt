@@ -1,0 +1,16 @@
+Current Features
+****************
+	• Send Mention notifications as notification or email
+	• Mention with @Username, [mention]Username[/mention] or [mention="Username"]Nickname[/mention]
+	• All three can be deactivated separately
+	• Mentions are replaced in text with username color
+	• Autocomplete feature whily typing mentions...
+	• ... with avatars and username color
+	• Suggest user who have posted in this topic first
+	• Automatically closes mention BBCodes
+	• Defining of own [mention] BBCode is forbidden
+
+Planned Features
+****************
+	• None
+

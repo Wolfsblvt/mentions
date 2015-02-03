@@ -1,0 +1,62 @@
+services:
+    wolfsblvt.mentions.listener:
+        class: wolfsblvt\mentions\event\listener
+        arguments:
+            - @wolfsblvt.mentions.mentions
+            - @wolfsblvt.mentions.parser
+            - @config
+            - @path_helper
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }
+    wolfsblvt.mentions.mentions:
+        class: wolfsblvt\mentions\core\mentions
+        arguments:
+            - @dbal.conn
+            - @config
+            - @template
+            - @controller.helper
+            - @user
+            - @auth
+            - @request
+            - @dispatcher
+            - @path_helper
+            - @notification_manager
+    wolfsblvt.mentions.parser:
+        class: wolfsblvt\mentions\core\parser
+        arguments:
+            - @wolfsblvt.mentions.mentions
+            - @dbal.conn
+            - @config
+            - @template
+            - @user
+    wolfsblvt.mentions.controller:
+        class: wolfsblvt\mentions\controller\controller
+        arguments:
+            - @wolfsblvt.mentions.mentions
+            - @config
+            - @dbal.conn
+            - @controller.helper
+            - @path_helper
+            - @request
+            - @user
+
+    wolfsblvt.mentions.notification.type.mention:
+        class: wolfsblvt\mentions\notification\mention
+        scope: prototype # scope MUST be prototype for this to work!
+        arguments:
+            - @wolfsblvt.mentions.mentions
+            - @user_loader
+            - @dbal.conn
+            - @cache.driver
+            - @user
+            - @auth
+            - @config
+            - %core.root_path%
+            - %core.php_ext%
+            - %tables.notification_types%
+            - %tables.notifications%
+            - %tables.user_notifications%
+        tags:
+            - { name: notification.type }
