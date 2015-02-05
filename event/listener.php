@@ -78,7 +78,6 @@ class listener implements EventSubscriberInterface
 
 			// Message parsing
 			'core.modify_text_for_display_before'			=> 'replace_mentions_for_display',
-			'core.modify_text_for_display_before'			=> 'replace_mentions_for_display',
 
 			// Display of custom BBCodes
 			'core.display_custom_bbcodes_modify_sql'		=> 'custom_bbcodes_display',
