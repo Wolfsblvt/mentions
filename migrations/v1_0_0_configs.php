@@ -28,7 +28,7 @@ class v1_0_0_configs extends \phpbb\db\migration\migration
 			array('config.add', array('wolfsblvt.mentions.autocomplete_autoclose_bbcode',	true)),
 
 			// Load settings
-			array('config.add', array('wolfsblvt.mentions.min_posts_suggest',				0)),
+			array('config.add', array('wolfsblvt.mentions.min_posts_suggest',				1)),
 			array('config.add', array('wolfsblvt.mentions.maximum_at_mentions_per_post',	50)),
 			array('config.add', array('wolfsblvt.mentions.autocomplete_remote_load',		false)),
 		);
