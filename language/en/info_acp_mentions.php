@@ -52,7 +52,7 @@ $lang = array_merge($lang, array(
 	'MENTIONS_ACTIVE_AT_EXPLAIN'						=> 'Activate the possibility to mentions users by simply typing &quot;@&quot;, followed by the username.',
 	'MENTIONS_REPLACE_IN_TEXT'							=> 'Replace Mentions in Text',
 	'MENTIONS_REPLACE_IN_TEXT_EXPLAIN'					=> 'If enabled, mentions in the text will be replaced with the username link in the correct color.',
-	'MENTIONS_IMAGE_INLINE'								=> 'Avator in front of replaced usernames',
+	'MENTIONS_IMAGE_INLINE'								=> 'Avatar in front of replaced usernames',
 	'MENTIONS_IMAGE_INLINE_EXPLAIN'						=> 'If enabled, the replaced username will be prepended by the user avatar.',
 
 	// Autocomplete settings
