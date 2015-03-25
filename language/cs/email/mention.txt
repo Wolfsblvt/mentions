@@ -1,0 +1,19 @@
+Subject: Upozornění na zmínku v příspěvku – „{TOPIC_TITLE}“
+
+Ahoj {USERNAME},
+
+uživatel „{AUTHOR_NAME}“ se o Vás zmínil v tématu „{TOPIC_TITLE}“ na fóru „{SITENAME}“. Pro zobrazení příspěvku můžete použít následující odkaz.
+
+Pokud chcete zobrazit příspěvek, klepněte na následující odkaz:
+{U_VIEW_POST}
+
+Pokud chcete zobrazit téma, klepněte na následující odkaz:
+{U_TOPIC}
+
+Pokud chcete zobrazit fórum, klepněte na následující odkaz:
+{U_FORUM}
+
+Pokud si nepřejete dostávat zprávy ohledně příspěvků, kde Vás někdo zmínil, aktualizujte své nastavení upozornění zde:
+{U_NOTIFICATION_SETTINGS}
+
+{EMAIL_SIG}
