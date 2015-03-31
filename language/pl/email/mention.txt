@@ -1,0 +1,20 @@
+Subject: Zawiadomienie o tym, że zostałeś wspomniany - "{TOPIC_TITLE}"
+
+Hej {USERNAME},
+
+Otrzymujesz to powiadomienie ze względu na to, że "{AUTHOR_NAME}" wspomniał cię w w temacie "{TOPIC_TITLE}" na "{SITENAME}". Masz do wyboru następujące odnośniki.
+
+Jeżeli chcesz zobaczyć tego posta, kliknij w:
+{U_VIEW_POST}
+
+Jeżeli chcesz zobaczyć wątek, kliknij w:
+{U_TOPIC}
+
+Jeżeli chcesz przejść do forum, kliknij w:
+{U_FORUM}
+
+Natomiast jeżeli w ogóle nie chcesz otrzymywać informacji po tym, gdy ktoś cię wspomniał, zmień ustawienia swojego konta pod odnośnikiem:
+
+{U_NOTIFICATION_SETTINGS}
+
+{EMAIL_SIG}
