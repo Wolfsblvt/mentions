@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Allows users to mention other users in posts. If a user is mentioned, he will recieve a notification unless he deactivated this notification. Meantioned usernames can be automatically colored in their username color. Mentioned users will be autosuggested.",
 	"homepage": "http://pinkes-forum.de/dev/find.php?ext=mentions",
-	"version": "1.0.0",
-	"time": "2015-02-03",
+	"version": "1.1.0",
+	"time": "2017-01-22",
 	"keywords": ["phpbb", "extension", "mentions", "mention", "notifcation"],
 	"license": "GPL-2.0",
 	"authors": [
@@ -13,7 +13,12 @@
 			"homepage": "http://www.pinkes-forum.de/",
 			"email": "wolfsblvt@gmx.de",
 			"role": "Developer"
-		}
+		},
+		{
+			"name": "InuYaksa",
+			"homepage": "http://areaaperta.com/",
+			"role": "Porting to PhpBB3.2"
+		}    
 	],
 	"require": {
 		"php": ">=5.4.0"
@@ -21,7 +26,7 @@
 	"extra": {
 		"display-name": "@Mention System",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.4,<3.2.*@dev"
+			"phpbb/phpbb": ">=3.2.*"
 		},
 		"version-check": {
 			"host": "pinkes-forum.de",

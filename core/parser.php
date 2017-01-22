@@ -66,7 +66,7 @@ class parser
 			$start_text = $text;
 		}
 
-		for ($i; $i < 100; $i++)
+		for($i; $i < 100; $i++)
 		{
 			// Get mentioned users ordered by position descending, so that we can safely replace without conflict
 			$mentions = $this->mentions->get_mentioned_users($text, true);

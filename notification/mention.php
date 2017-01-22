@@ -6,6 +6,7 @@
  * @copyright (c) 2015 Wolfsblvt ( www.pinkes-forum.de )
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  * @author Clemens Husung (Wolfsblvt)
+ * @patched for 3.2 by InuYaksa
  */
 
 namespace wolfsblvt\mentions\notification;
@@ -44,39 +45,10 @@ class mention extends \phpbb\notification\type\post
 	/** @var \wolfsblvt\mentions\core\mentions */
 	protected $mentions;
 
-	/**
-	 * Notification Mention Constructor
-	 *
-	 * @param \wolfsblvt\mentions\core\mentions $mentions
-	 * @param \phpbb\user_loader $user_loader
-	 * @param \phpbb\db\driver\driver_interface $db
-	 * @param \phpbb\cache\driver\driver_interface $cache
-	 * @param \phpbb\user $user
-	 * @param \phpbb\auth\auth $auth
-	 * @param \phpbb\config\config $config
-	 * @param string $phpbb_root_path
-	 * @param string $php_ext
-	 * @param string $notification_types_table
-	 * @param string $notifications_table
-	 * @param string $user_notifications_table
-	 * @return \phpbb\notification\type\base
-	 */
-	public function __construct(\wolfsblvt\mentions\core\mentions $mentions, \phpbb\user_loader $user_loader, \phpbb\db\driver\driver_interface $db, \phpbb\cache\driver\driver_interface $cache, \phpbb\user $user, \phpbb\auth\auth $auth, \phpbb\config\config $config, $phpbb_root_path, $php_ext, $notification_types_table, $notifications_table, $user_notifications_table)
+  
+  public function set_mentions(\wolfsblvt\mentions\core\mentions $mentions)
 	{
 		$this->mentions = $mentions;
-		$this->user_loader = $user_loader;
-		$this->db = $db;
-		$this->cache = $cache;
-		$this->user = $user;
-		$this->auth = $auth;
-		$this->config = $config;
-
-		$this->phpbb_root_path = $phpbb_root_path;
-		$this->php_ext = $php_ext;
-
-		$this->notification_types_table = $notification_types_table;
-		$this->notifications_table = $notifications_table;
-		$this->user_notifications_table = $user_notifications_table;
 	}
 
 	/**
@@ -104,9 +76,38 @@ class mention extends \phpbb\notification\type\post
 		), $options);
 
 		$users = $this->mentions->get_mentioned_users($post['post_text']);
-		$user_ids = array_map(function ($value) { return $value['user_id']; }, $users);
+		$user_ids = array_map(function ($value) { return (int) $value['user_id']; }, $users);
 
-		return $this->get_authorised_recipients($user_ids, $post['forum_id'], $options, true);
+    $notify_users = $this->get_authorised_recipients($user_ids, $post['forum_id'], $options, true);
+    
+    if (empty($notify_users)) {
+			return array();
+		}    
+
+		// Try to find the users who already have been notified about replies and have not read the topic since and just update their notifications
+		$notified_users = $this->notification_manager->get_notified_users($this->get_type(), array(
+			'item_parent_id'	=> static::get_item_parent_id($post),
+			'read'				=> 0,
+		));
+
+		foreach ($notified_users as $user => $notification_data) {
+			unset($notify_users[$user]);
+
+			/** @var post $notification */
+			$notification = $this->notification_manager->get_item_type_class($this->get_type(), $notification_data);
+			$update_responders = $notification->add_responders($post);
+			if (!empty($update_responders))
+			{
+				$this->notification_manager->update_notification($notification, $update_responders, array(
+					'item_parent_id'	=> self::get_item_parent_id($post),
+					'read'				=> 0,
+					'user_id'			=> $user,
+				));
+			}
+		}
+
+		return $notify_users;    
+    
 	}
 
 	/**
@@ -117,36 +118,46 @@ class mention extends \phpbb\notification\type\post
 	public function update_notifications($post)
 	{
 		$old_notifications = array();
-		$sql = 'SELECT n.user_id
-			FROM ' . $this->notifications_table . ' n, ' . $this->notification_types_table . ' nt
-			WHERE n.notification_type_id = ' . (int) $this->notification_type_id . '
-				AND n.item_id = ' . self::get_item_id($post) . '
-				AND nt.notification_type_id = n.notification_type_id
-				AND nt.notification_type_enabled = 1';
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$old_notifications[] = $row['user_id'];
-		}
-		$this->db->sql_freeresult($result);
+    
+/*    
+    if ($this->notifications_table) {
+    
+      $sql = 'SELECT n.user_id
+        FROM ' . $this->notifications_table . ' n, ' . $this->notification_types_table . ' nt
+        WHERE n.notification_type_id = ' . (int) $this->notification_type_id . '
+          AND n.item_id = ' . self::get_item_id($post) . '
+          AND nt.notification_type_id = n.notification_type_id
+          AND nt.notification_type_enabled = 1';
+      $result = $this->db->sql_query($sql);
+      while ($row = $this->db->sql_fetchrow($result))
+      {
+        $old_notifications[] = $row['user_id'];
+      }
+      $this->db->sql_freeresult($result);
+      
+    }
+*/    
 
 		// Find the new users to notify
-		$notifications = $this->find_users_for_notification($post);
+		$notifications = $this->find_users_for_notification($post);  // updated for 3.2
 
 		// Find the notifications we must delete
-		$remove_notifications = array_diff($old_notifications, array_keys($notifications));
+//		$remove_notifications = array_diff($old_notifications, array_keys($notifications));  useless
 
 		// Find the notifications we must add
-		$add_notifications = array();
+/*    
+		$add_notifications = array();    
 		foreach (array_diff(array_keys($notifications), $old_notifications) as $user_id)
 		{
 			$add_notifications[$user_id] = $notifications[$user_id];
 		}
+*/    
 
 		// Add the necessary notifications
-		$this->notification_manager->add_notifications_for_users($this->get_type(), $post, $add_notifications);
+		$this->notification_manager->add_notifications_for_users($this->get_type(), $post, $notifications); //$add_notifications);
 
 		// Remove the necessary notifications
+/*    
 		if (!empty($remove_notifications))
 		{
 			$sql = 'DELETE FROM ' . $this->notifications_table . '
@@ -155,6 +166,7 @@ class mention extends \phpbb\notification\type\post
 					AND ' . $this->db->sql_in_set('user_id', $remove_notifications);
 			$this->db->sql_query($sql);
 		}
+*/    
 
 		// return true to continue with the update code in the notifications service (this will update the rest of the notifications)
 		return true;
