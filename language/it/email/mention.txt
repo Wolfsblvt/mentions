@@ -1,0 +1,20 @@
+Subject: Sei stato citato qui "{TOPIC_TITLE}"
+
+Ciao {USERNAME},
+
+Hai ricevuto questa notifica perché l'utente "{AUTHOR_NAME}" di ha citato nel topic "{TOPIC_TITLE}" su "{SITENAME}". Segui il link per leggere il post.
+
+Clicca su questo link se vuoi leggere il post:
+{U_VIEW_POST}
+
+Clicca su questo link se vuoi accedere al topic:
+{U_TOPIC}
+
+Clicca su questo link se vuoi accedere al forum:
+{U_FORUM}
+
+Se non vuoi più ricevere notifiche quando qualcuno ti cita in un post, aggiona le impostazioni di notifica nella tua pagina di profilo:
+
+{U_NOTIFICATION_SETTINGS}
+
+{EMAIL_SIG}

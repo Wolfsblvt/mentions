@@ -1,6 +1,9 @@
 Actual Version
 **************
 
+-- Version 1.1.0 --------------
+  * Ported to 3.2
+
 -- Version 1.0.0 --------------
 	• First implementation for 3.1
 

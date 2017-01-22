@@ -44,19 +44,10 @@ services:
 
     wolfsblvt.mentions.notification.type.mention:
         class: wolfsblvt\mentions\notification\mention
-        scope: prototype # scope MUST be prototype for this to work!
-        arguments:
-            - @wolfsblvt.mentions.mentions
-            - @user_loader
-            - @dbal.conn
-            - @cache.driver
-            - @user
-            - @auth
-            - @config
-            - %core.root_path%
-            - %core.php_ext%
-            - %tables.notification_types%
-            - %tables.notifications%
-            - %tables.user_notifications%
+        scope: prototype
+        parent: notification.type.post
+        calls:
+            - [set_user_loader, [@user_loader]]
+            - [set_mentions, [@wolfsblvt.mentions.mentions]]       
         tags:
             - { name: notification.type }
