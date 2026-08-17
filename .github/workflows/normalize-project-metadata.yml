@@ -1,0 +1,91 @@
+name: Normalize project metadata
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    if: github.actor == 'Wolfsblvt'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import subprocess
+          import sys
+
+          workflow = Path('.github/workflows/normalize-project-metadata.yml')
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\0')
+          changed = []
+          remaining = []
+
+          patterns = [
+              (re.compile(r'Clemens\s+Husung\s*\(\s*Wolfsblvt\s*\)', re.IGNORECASE), 'Wolfsblvt'),
+              (re.compile(r'Husung\s*,\s*Clemens(?:\s*\(\s*Wolfsblvt\s*\))?', re.IGNORECASE), 'Wolfsblvt'),
+              (re.compile(r'Clemens[\s._-]+Husung', re.IGNORECASE), 'Wolfsblvt'),
+              (re.compile(r'clemenshusung', re.IGNORECASE), 'wolfsblvt'),
+          ]
+          leftover = re.compile(r'(?i)(?:\bclemens\b|\bhusung\b|clemens[._-]?husung)')
+
+          for raw_path in tracked:
+              if not raw_path:
+                  continue
+              path = Path(raw_path.decode('utf-8'))
+              if path == workflow or not path.is_file():
+                  continue
+
+              data = path.read_bytes()
+              if b'\0' in data:
+                  continue
+              try:
+                  text = data.decode('utf-8')
+              except UnicodeDecodeError:
+                  continue
+
+              updated = text
+              for pattern, replacement in patterns:
+                  updated = pattern.sub(replacement, updated)
+
+              if updated != text:
+                  path.write_bytes(updated.encode('utf-8'))
+                  changed.append(str(path))
+
+              if leftover.search(updated):
+                  remaining.append(str(path))
+
+          print('Updated files:')
+          for path in changed:
+              print(f'  {path}')
+
+          if remaining:
+              print('Unresolved identity references:', file=sys.stderr)
+              for path in remaining:
+                  print(f'  {path}', file=sys.stderr)
+              raise SystemExit(2)
+          PY
+
+      - name: Remove maintenance workflow
+        shell: bash
+        run: rm .github/workflows/normalize-project-metadata.yml
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Normalize project metadata'
+          git push
