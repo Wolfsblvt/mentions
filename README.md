@@ -1,3 +1,11 @@
+#### Disclaimer
+> [!WARNING]
+> This project is preserved as historical source code only. It is no longer maintained, may not work with current phpBB versions, and receives no support or updates.
+>
+> Anyone is welcome to continue development through a fork, provided the repository's license and any applicable third-party licenses are respected.
+
+-----
+
 mentions
 ========
 
